@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dapper-starship-be4090.netlify.app/sitemap.xml
