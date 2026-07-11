@@ -1,15 +1,44 @@
 const FIREBASE_DB_URL = "https://yemenplaza-8d9d8-default-rtdb.europe-west1.firebasedatabase.app/products.json";
 const EXCHANGE_RATE = 140;
 const WHATSAPP_NUMBER = "967775005190";
+const SITE_URL = window.location.origin;
 
 let allProducts = [];
 
+// دوال تحديث SEO
+function setMetaTag(property, content) {
+  let meta = document.querySelector(`meta[property="${property}"]`) || document.querySelector(`meta[name="${property}"]`);
+  if (!meta) {
+    meta = document.createElement('meta');
+    if (property.startsWith('og:')) meta.setAttribute('property', property);
+    else meta.setAttribute('name', property);
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute('content', content);
+}
+
+function updateSEO(product) {
+  document.title = product.title + ' | يمن بلازا';
+  const desc = (product.description || '').substring(0, 160) || product.title;
+  setMetaTag('description', desc);
+  setMetaTag('og:title', product.title);
+  setMetaTag('og:description', desc);
+  setMetaTag('og:image', product.image);
+  setMetaTag('og:url', `${SITE_URL}/?product=${encodeURIComponent(product.id)}`);
+  setMetaTag('og:type', 'product');
+  setMetaTag('twitter:title', product.title);
+  setMetaTag('twitter:description', desc);
+  setMetaTag('twitter:image', product.image);
+}
+
+// دوال تنسيق السعر
 function formatPrice(yerPrice) {
   if (!yerPrice || yerPrice <= 0) return 'للاستفسار';
   const sarPrice = Math.round(yerPrice / EXCHANGE_RATE);
   return Number(yerPrice).toLocaleString() + ' ر.ي <span class="sar-price">(' + sarPrice + ' ر.س)</span>';
 }
 
+// جلب المنتجات
 async function fetchProducts() {
   const grid = document.getElementById('productsGrid');
   try {
@@ -19,7 +48,6 @@ async function fetchProducts() {
       grid.innerHTML = '<p>لا توجد منتجات حالياً.</p>';
       return;
     }
-
     const products = [];
     for (let key in data) {
       const item = data[key];
@@ -43,6 +71,7 @@ async function fetchProducts() {
     }
     allProducts = products;
     displayProducts(products);
+    checkProductInURL();
   } catch (e) {
     grid.innerHTML = '<p>حدث خطأ في تحميل المنتجات.</p>';
     console.error(e);
@@ -53,32 +82,35 @@ function displayProducts(products) {
   const grid = document.getElementById('productsGrid');
   grid.innerHTML = '';
   products.forEach(p => {
-    const card = document.createElement('div');
+    const card = document.createElement('a');
     card.className = 'product-card';
+    card.href = `?product=${encodeURIComponent(p.id)}`;
     card.innerHTML = `
       <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=يمن+بلازا'">
       <h3>${p.title}</h3>
       <div class="price">💰 ${formatPrice(p.price)}</div>
     `;
-    card.addEventListener('click', () => openModal(p));
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(p);
+      window.history.pushState({}, '', card.href);
+      updateSEO(p);
+    });
     grid.appendChild(card);
   });
 }
 
-// ===== دوال النافذة المنبثقة =====
+// فتح النافذة المنبثقة
 function openModal(product) {
   document.getElementById('modalTitle').innerText = product.title;
   document.getElementById('modalPrice').innerHTML = '💰 ' + formatPrice(product.price);
   document.getElementById('modalDesc').innerText = product.description || 'لا يوجد وصف.';
 
-  // معرض الصور
   const mainImg = document.getElementById('modalMainImage');
   const thumbsContainer = document.getElementById('modalThumbs');
   const images = product.images.length > 0 ? product.images : [product.image];
-
   mainImg.src = images[0];
   thumbsContainer.innerHTML = '';
-
   images.forEach((img, i) => {
     const thumb = document.createElement('img');
     thumb.src = img;
@@ -91,12 +123,10 @@ function openModal(product) {
     thumbsContainer.appendChild(thumb);
   });
 
-  // زر واتساب
   const waBtn = document.getElementById('modalWaBtn');
   const sarText = product.price > 0 ? '(' + Math.round(product.price / EXCHANGE_RATE) + ' ر.س)' : '';
   const waMsg = `السلام عليكم، أريد شراء: ${product.title}\nالسعر: ${product.price > 0 ? product.price.toLocaleString() + ' ر.ي ' + sarText : 'للاستفسار'}`;
   waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`;
-
   document.getElementById('productModal').style.display = 'flex';
 }
 
@@ -104,11 +134,24 @@ function openModal(product) {
 document.getElementById('modalClose').addEventListener('click', () => {
   document.getElementById('productModal').style.display = 'none';
 });
-
 window.addEventListener('click', (e) => {
   if (e.target === document.getElementById('productModal')) {
     document.getElementById('productModal').style.display = 'none';
   }
 });
 
+// التحقق من وجود product في الرابط عند التحميل
+function checkProductInURL() {
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get('product');
+  if (productId && allProducts.length > 0) {
+    const product = allProducts.find(p => p.id === productId);
+    if (product) {
+      openModal(product);
+      updateSEO(product);
+    }
+  }
+}
+
+// البدء
 fetchProducts();
