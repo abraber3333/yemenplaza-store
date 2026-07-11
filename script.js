@@ -1,16 +1,15 @@
 const FIREBASE_DB_URL = "https://yemenplaza-8d9d8-default-rtdb.europe-west1.firebasedatabase.app/products.json";
-const EXCHANGE_RATE = 140; // 1 ريال سعودي = 140 ريال يمني
+const EXCHANGE_RATE = 140;
+const WHATSAPP_NUMBER = "967775005190";
 
 let allProducts = [];
 
-// دالة تنسيق السعر
 function formatPrice(yerPrice) {
   if (!yerPrice || yerPrice <= 0) return 'للاستفسار';
   const sarPrice = Math.round(yerPrice / EXCHANGE_RATE);
   return Number(yerPrice).toLocaleString() + ' ر.ي <span class="sar-price">(' + sarPrice + ' ر.س)</span>';
 }
 
-// جلب المنتجات من Firebase
 async function fetchProducts() {
   const grid = document.getElementById('productsGrid');
   try {
@@ -50,7 +49,6 @@ async function fetchProducts() {
   }
 }
 
-// عرض المنتجات
 function displayProducts(products) {
   const grid = document.getElementById('productsGrid');
   grid.innerHTML = '';
@@ -61,15 +59,56 @@ function displayProducts(products) {
       <img src="${p.image}" alt="${p.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=يمن+بلازا'">
       <h3>${p.title}</h3>
       <div class="price">💰 ${formatPrice(p.price)}</div>
-      <button class="btn-wa" onclick="event.stopPropagation(); window.open('https://wa.me/967775005190?text=' + encodeURIComponent('السلام عليكم، أريد طلب: ${p.title}'))">💬 واتساب</button>
     `;
-    card.addEventListener('click', () => {
-      // يمكنك إضافة فتح مودال هنا لاحقاً
-      alert('الضغط على المنتج: ' + p.title);
-    });
+    card.addEventListener('click', () => openModal(p));
     grid.appendChild(card);
   });
 }
 
-// بدء تحميل المنتجات
+// ===== دوال النافذة المنبثقة =====
+function openModal(product) {
+  document.getElementById('modalTitle').innerText = product.title;
+  document.getElementById('modalPrice').innerHTML = '💰 ' + formatPrice(product.price);
+  document.getElementById('modalDesc').innerText = product.description || 'لا يوجد وصف.';
+
+  // معرض الصور
+  const mainImg = document.getElementById('modalMainImage');
+  const thumbsContainer = document.getElementById('modalThumbs');
+  const images = product.images.length > 0 ? product.images : [product.image];
+
+  mainImg.src = images[0];
+  thumbsContainer.innerHTML = '';
+
+  images.forEach((img, i) => {
+    const thumb = document.createElement('img');
+    thumb.src = img;
+    if (i === 0) thumb.classList.add('active');
+    thumb.addEventListener('click', () => {
+      mainImg.src = img;
+      document.querySelectorAll('.modal-thumbs img').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    });
+    thumbsContainer.appendChild(thumb);
+  });
+
+  // زر واتساب
+  const waBtn = document.getElementById('modalWaBtn');
+  const sarText = product.price > 0 ? '(' + Math.round(product.price / EXCHANGE_RATE) + ' ر.س)' : '';
+  const waMsg = `السلام عليكم، أريد شراء: ${product.title}\nالسعر: ${product.price > 0 ? product.price.toLocaleString() + ' ر.ي ' + sarText : 'للاستفسار'}`;
+  waBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(waMsg)}`;
+
+  document.getElementById('productModal').style.display = 'flex';
+}
+
+// إغلاق النافذة
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('productModal').style.display = 'none';
+});
+
+window.addEventListener('click', (e) => {
+  if (e.target === document.getElementById('productModal')) {
+    document.getElementById('productModal').style.display = 'none';
+  }
+});
+
 fetchProducts();
