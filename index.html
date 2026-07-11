@@ -13,39 +13,131 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <header class="header">
-    <div class="logo">
-      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEgr0hNnNS-5JuIFniIGybPWlQAtgmVTjUrR2b3RsiZR3h0zQT2-k77sCGXWrklKUF4O-MtgEx_5jyV3P-P-uCNZ131itiYev4asNLj6EM4IIHk2W5sOFwSQ9tA1-ILXAnz1PRdI8PTIl75h-d8U55rH4qLnUY0ZzI3tyeeysFGCp_sXMETv6PgfgQPSwCY" alt="يمن بلازا">
-      <h1>يمن بلازا</h1>
-      <p>متجر يمن بلازا للإلكترونيات والأدوات المنزلية والمهنية</p>
-    </div>
-  </header>
+<!-- ===== شريط واتساب العلوي ===== -->
+<div class="top-whatsapp-bar">
+  <a href="https://whatsapp.com/channel/0029VbAXj08FCCoMeBLgKN2Z" target="_blank" rel="noopener">
+    📢 تابع قناتنا على واتساب ليصلك كل جديد
+  </a>
+</div>
 
-  <main>
-    <h2 class="section-title">أحدث المنتجات</h2>
-    <div class="products-grid" id="productsGrid">
-      <p>جاري تحميل المنتجات...</p>
-    </div>
-  </main>
-
-  <!-- ===== نافذة تفاصيل المنتج ===== -->
-  <div class="product-modal" id="productModal">
-    <div class="modal-content">
-      <span class="modal-close" id="modalClose">&times;</span>
-      <h2 id="modalTitle"></h2>
-      <div class="modal-gallery">
-        <img id="modalMainImage" src="" alt="صورة المنتج" class="modal-main-image">
-        <div class="modal-thumbs" id="modalThumbs"></div>
-      </div>
-      <div class="modal-price" id="modalPrice"></div>
-      <div class="modal-desc" id="modalDesc"></div>
-      <a href="#" id="modalWaBtn" class="btn-wa-modal" target="_blank">💬 شراء عبر واتساب</a>
+<!-- ===== الهيدر ===== -->
+<header id="header-section">
+  <div class="header-logo">
+    <img alt="يمن بلازا" src="https://blogger.googleusercontent.com/img/a/AVvXsEgr0hNnNS-5JuIFniIGybPWlQAtgmVTjUrR2b3RsiZR3h0zQT2-k77sCGXWrklKUF4O-MtgEx_5jyV3P-P-uCNZ131itiYev4asNLj6EM4IIHk2W5sOFwSQ9tA1-ILXAnz1PRdI8PTIl75h-d8U55rH4qLnUY0ZzI3tyeeysFGCp_sXMETv6PgfgQPSwCY">
+  </div>
+  <h1>يمن بلازا</h1>
+  <p>متجر يمن بلازا للإلكترونيات والأدوات المنزلية والمهنية - توصيل سريع وآمن</p>
+  <div class="top-ticker" id="tickerBar">
+    <div class="ticker-title">أحدث الأخبار</div>
+    <div class="ticker-container">
+      <div class="ticker-message active">🛒 أهلاً بكم في متجر يمن بلازا للتسوق الإلكتروني</div>
+      <div class="ticker-message">🏆 أكثر من 350 مورداً معتمداً يوفرون آلاف المنتجات بأسعار منافسة للجملة والتجزئة</div>
+      <div class="ticker-message">📱 إلكترونيات وهواتف ذكية وإكسسوارات متنوعة</div>
+      <div class="ticker-message">📷 كاميرات مراقبة وأنظمة حماية ومستلزماتها</div>
+      <div class="ticker-message">🔋 بطاريات وأنظمة طاقة شمسية وحلول طاقة متكاملة</div>
+      <div class="ticker-message">🏠 أجهزة منزلية وأدوات مهنية ومواد بناء متنوعة</div>
+      <div class="ticker-message">🚚 توصيل سريع داخل صنعاء لجميع المديريات</div>
+      <div class="ticker-message">📦 شحن آمن إلى جميع المحافظات اليمنية</div>
+      <div class="ticker-message">📋 يتم إرسال سند الشحن للعميل قبل السداد</div>
+      <div class="ticker-message">🛡️ ضمان على المنتجات المؤهلة</div>
+      <div class="ticker-message">💰 عروض وتخفيضات مستمرة وأسعار خاصة للكميات</div>
+      <div class="ticker-message">📞 للطلبات والاستفسارات: 772020339</div>
+      <div class="ticker-message">🌐 Yemen Plaza - وجهتك الموثوقة للتسوق الإلكتروني في اليمن</div>
     </div>
   </div>
+</header>
 
-  <script src="script.js"></script>
+<!-- ===== شريط التنقل ===== -->
+<nav class="nav">
+  <div class="search-nav-container">
+    <input class="search-nav-input" id="searchInput" onkeyup="filterProducts()" placeholder="🔍 ابحث عن منتج..." type="text">
+  </div>
+  <div class="nav-item"><a href="#" onclick="loadAllProducts(); return false;">🏠 الرئيسية</a></div>
+  <div class="dropdown">
+    <span class="dropbtn">📂 الأقسام ▼</span>
+    <div class="dropdown-content" id="navCategories"></div>
+  </div>
+  <div class="nav-item"><a href="#" onclick="openInfoModal('policy'); return false;">سياسة المتجر</a></div>
+  <div class="nav-item"><a href="#" onclick="openInfoModal('contact'); return false;">اتصل بنا</a></div>
+  <div class="nav-item"><a href="#" onclick="openInfoModal('payment'); return false;">طرق الدفع</a></div>
+</nav>
+
+<!-- ===== سلايدر "وصل الآن" ===== -->
+<div class="arrivals-slider" id="arrivalsSliderOuter">
+  <h2>🔥 وصل الآن</h2>
+  <div class="arrivals-container" id="arrivalsContainer">
+    <button class="arrivals-arrow arrivals-prev" onclick="arrivalsSlideMove(-1)">❮</button>
+    <button class="arrivals-arrow arrivals-next" onclick="arrivalsSlideMove(1)">❯</button>
+    <div class="arrivals-track" id="arrivalsTrack"></div>
+    <div class="arrivals-dots" id="arrivalsDots"></div>
+  </div>
+  <p id="arrivalsEmptyMsg" style="text-align:center;display:none;">لا توجد منتجات للعرض حاليا.</p>
+</div>
+
+<!-- ===== المحتوى الرئيسي ===== -->
+<main class="main-wrapper">
+  <div class="categories-dropdown" id="dynamicCategoriesDropdown">
+    <button class="categories-dropbtn">📂 جميع الأقسام ▼</button>
+    <div class="categories-dropdown-content" id="dropdownCategoriesList"></div>
+  </div>
+  <h2 class="section-title" id="productsTitle">✨ أحدث المنتجات</h2>
+  <div class="blog-posts" id="productsGrid">
+    <p>⏳ جاري تحميل المنتجات...</p>
+  </div>
+</main>
+
+<!-- ===== السلة الجانبية ===== -->
+<div class="cart-float-btn" onclick="toggleCart()">🛒<div class="cart-count" id="cartCount">0</div></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <span class="close-cart" onclick="toggleCart()">✕</span>
+  <h3>سلة المشتريات</h3>
+  <div class="cart-items" id="cartItems">السلة فارغة</div>
+  <div class="cart-total" id="cartTotal"></div>
+  <div class="cart-buttons">
+    <button class="btn-wa-send" onclick="sendCart()">📲 إتمام الطلب (واتساب)</button>
+    <button class="btn-clear" onclick="clearCart()">🗑 تفريغ السلة</button>
+  </div>
+</div>
+
+<!-- ===== نافذة تفاصيل المنتج (Modal) ===== -->
+<div class="product-modal" id="productModal">
+  <div class="modal-content">
+    <span class="modal-close" id="modalClose">✕</span>
+    <div id="modalRibbon"></div>
+    <h2 class="modal-title" id="modalTitle"></h2>
+    <div class="modal-gallery">
+      <img id="modalMainImage" src="" alt="" class="modal-image">
+      <div class="modal-thumbs" id="modalThumbs"></div>
+    </div>
+    <div class="modal-price" id="modalPrice"></div>
+    <div class="modal-desc" id="modalDesc"></div>
+    <div class="modal-share" id="modalShare"></div>
+    <div class="modal-buttons">
+      <button class="modal-btn-cart" id="modalCartBtn" onclick="addToCartFromModal()">🛒 إضافة للسلة</button>
+      <a class="modal-btn-wa" id="modalWaBtn" target="_blank">💬 شراء عبر واتساب</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== مودال المعلومات ===== -->
+<div class="info-modal" id="infoModal">
+  <div class="info-modal-content" id="infoModalContent">
+    <button class="close-info" onclick="closeInfoModal()">✕</button>
+    <div id="infoModalBody"></div>
+  </div>
+</div>
+
+<!-- ===== الفوتر ===== -->
+<footer class="footer-links">
+  <a href="https://wa.me/967775005190" target="_blank">💬 واتساب</a>
+  <a href="#" onclick="openInfoModal('contact'); return false;">📞 اتصل بنا</a>
+  <p>جميع الحقوق محفوظة © 2026 - يمن بلازا | اليمن</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
